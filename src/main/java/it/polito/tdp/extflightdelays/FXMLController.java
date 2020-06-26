@@ -28,7 +28,7 @@ public class FXMLController {
     private Button btnCreaGrafo;
 
     @FXML
-    private ComboBox<?> cmbBoxStati;
+    private ComboBox<String> cmbBoxStati;
 
     @FXML
     private Button btnVisualizzaVelivoli;
@@ -44,17 +44,66 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	
+    	this.txtResult.clear();
+    	
+    	try {
+    		
+    		this.model.generaGrafo();
+    		this.txtResult.appendText("Grafo creato!\n# vertici: "+this.model.getNvertici()+
+    				"\n# archi: "+this.model.getNarchi());
+    		
+    		this.cmbBoxStati.getItems().setAll(this.model.getStati());
+    		
+    	}catch(Exception e) {
+    		this.txtResult.appendText("ERRORE, impossibile creare il grafo!");
+    		return;
+    	}
     }
 
     @FXML
     void doSimula(ActionEvent event) {
 
-    }
+		this.txtResult.clear();
+		
+		int turisti;
+		int giorni;
+		
+		try {
+			
+			try {
+				
+				turisti = Integer.parseInt(this.txtT.getText());
+				giorni = Integer.parseInt(this.txtG.getText());
+				
+			}catch(NumberFormatException e1) {
+				this.txtResult.appendText("ERRORE, inserire un numero intero T di turisti e G di gionri di viaggio!");
+				return;
+			}
+			
+			this.txtResult.appendText(this.model.simulazioneTuristi(this.cmbBoxStati.getValue(), turisti, giorni));
 
+		} catch (Exception e) {
+
+			this.txtResult.appendText("ERRORE, creare il grafo e scegliere uno stato dal menù a tendina!\n"
+					+ "Poi inserire un numero intero T di turisti e G di gionri di viaggio!");
+			return;
+		}
+	}
+    
     @FXML
     void doVisualizzaVelivoli(ActionEvent event) {
-
+    	
+    	this.txtResult.clear();
+    	try {
+    		
+    		this.txtResult.appendText(this.model.getStatiCollegati(this.cmbBoxStati.getValue()));
+    		
+    	}catch(Exception e) {
+    		
+    		this.txtResult.appendText("ERRORE, creare il grafo e scegliere uno stato dal menù a tendina!");
+    		return;
+    	}
     }
 
     @FXML

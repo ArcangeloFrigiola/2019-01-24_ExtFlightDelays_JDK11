@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
 import it.polito.tdp.extflightdelays.model.Airline;
 import it.polito.tdp.extflightdelays.model.Airport;
 import it.polito.tdp.extflightdelays.model.Flight;
@@ -115,4 +119,70 @@ public class ExtFlightDelaysDAO {
 			throw new RuntimeException("Error Connection Database");
 		}
 	}
+	
+	public List<String> loadAllUSAStates() {
+		
+		String sql = "SELECT DISTINCT a.STATE AS stato " + 
+				"FROM airports AS a  "+ 
+				"WHERE a.COUNTRY='USA' " + 
+				"ORDER BY a.STATE ";
+		List<String> result = new LinkedList<String>();
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				
+				result.add(rs.getString("stato"));
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
+
+	public void addAllEdges(Graph<String, DefaultWeightedEdge> grafo) {
+		
+		String sql = "SELECT a1.STATE AS s1, a2.STATE AS s2, COUNT(DISTINCT f.TAIL_NUMBER) AS peso " + 
+				"FROM flights AS f, airports AS a1, airports AS a2 " + 
+				"WHERE a1.ID!=a2.ID " + 
+				"AND f.ORIGIN_AIRPORT_ID=a1.ID AND f.DESTINATION_AIRPORT_ID=a2.ID " + 
+				"GROUP BY a1.STATE, a2.STATE ";
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				
+				String stato1 = rs.getString("s1");
+				String stato2 = rs.getString("s2");
+				
+				Graphs.addEdge(grafo, stato1, stato2, rs.getInt("peso"));
+			}
+
+			conn.close();
+			return ;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+
+	}
+	
+	
 }
+
+
+
+
