@@ -87,6 +87,7 @@ public class FXMLController {
 
 			this.txtResult.appendText("ERRORE, creare il grafo e scegliere uno stato dal menù a tendina!\n"
 					+ "Poi inserire un numero intero T di turisti e G di gionri di viaggio!");
+			e.printStackTrace();
 			return;
 		}
 	}

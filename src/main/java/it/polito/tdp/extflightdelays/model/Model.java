@@ -1,6 +1,7 @@
 package it.polito.tdp.extflightdelays.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class Model {
 		String result = "Stati collegati a "+stato+" con un arco diretto:\n";
 		
 		List<String> listaStati = new ArrayList<>(Graphs.successorListOf(this.grafo, stato));
-		PriorityQueue<StatoPeso> statiOrdinati = new PriorityQueue<>();
+		List<StatoPeso> statiOrdinati = new ArrayList<>();
 		
 		for(String s: listaStati) {
 			
@@ -44,6 +45,7 @@ public class Model {
 			
 		}
 		
+		Collections.sort(statiOrdinati, new ComparatoreStatiPeso());
 		for(StatoPeso s: statiOrdinati) {
 			result+=s.getStato()+" "+s.getPeso()+"\n";
 		}
@@ -70,12 +72,12 @@ public class Model {
 		sim.initialize(this.grafo, value, turisti, giorni);
 		sim.run();
 		
-		Map<String, Double> mappaSimulazione = new HashMap<>(sim.getRisultatoSimluazione());
+		Map<String, Integer> mappaSimulazione = new HashMap<>(sim.getRisultatoSimluazione());
 		String result = "Turisti presenti in ciscuno stato al termine dei "+giorni+" giorni:\n";
 		
 		for(String state: mappaSimulazione.keySet()) {
 			
-			result+=state+" "+mappaSimulazione.get(state)+"\n";
+			result+="Stato: "+state+", #turisti: "+mappaSimulazione.get(state)+"\n";
 		}
 		
 		return result;

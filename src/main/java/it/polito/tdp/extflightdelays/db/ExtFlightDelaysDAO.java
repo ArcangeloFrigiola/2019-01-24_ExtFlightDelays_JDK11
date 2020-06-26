@@ -152,7 +152,7 @@ public class ExtFlightDelaysDAO {
 		
 		String sql = "SELECT a1.STATE AS s1, a2.STATE AS s2, COUNT(DISTINCT f.TAIL_NUMBER) AS peso " + 
 				"FROM flights AS f, airports AS a1, airports AS a2 " + 
-				"WHERE a1.ID!=a2.ID " + 
+				"WHERE a1.ID!=a2.ID AND a1.STATE!=a2.STATE " + 
 				"AND f.ORIGIN_AIRPORT_ID=a1.ID AND f.DESTINATION_AIRPORT_ID=a2.ID " + 
 				"GROUP BY a1.STATE, a2.STATE ";
 

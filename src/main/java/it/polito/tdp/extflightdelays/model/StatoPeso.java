@@ -1,6 +1,6 @@
 package it.polito.tdp.extflightdelays.model;
 
-public class StatoPeso implements Comparable<StatoPeso>{
+public class StatoPeso{
 	
 	private String stato;
 	private Double peso;
@@ -19,11 +19,6 @@ public class StatoPeso implements Comparable<StatoPeso>{
 	public Double getPeso() {
 		return peso;
 	}
-	@Override
-	public int compareTo(StatoPeso o) {
-		// TODO Auto-generated method stub
-		return (this.peso.compareTo(o.getPeso()));
-	}
-	
+
 	
 }
